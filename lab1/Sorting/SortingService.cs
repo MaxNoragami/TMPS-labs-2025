@@ -1,6 +1,4 @@
-﻿using lab1.SortingStrategies;
-
-namespace lab1;
+﻿namespace lab1.Sorting;
 
 public class SortingService
 {

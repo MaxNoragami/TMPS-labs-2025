@@ -1,4 +1,4 @@
-﻿namespace lab1.SortingStrategies;
+﻿namespace lab1.Sorting;
 
 public interface INumberSort
 {
