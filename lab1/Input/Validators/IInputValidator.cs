@@ -1,7 +1,6 @@
-﻿namespace lab1.Input.Validators;
+﻿using lab1.Input.Validators.AlgorithmInputValidators;
+using lab1.Input.Validators.NumberInputValidators;
 
-public interface IInputValidator
-{
-    List<double> ValidateNumbers(string input);
-    string ValidateAlgorithm(string algorithm);
-}
+namespace lab1.Input.Validators;
+
+public interface IInputValidator : INumberInputValidator, IAlgorithmInputValidator { }

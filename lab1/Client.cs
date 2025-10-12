@@ -1,8 +1,9 @@
 ﻿using lab1.Input.Handlers;
 using lab1.Input.Validators;
+using lab1.Input.Validators.NumberInputValidators;
 using lab1.Sorting;
 
-var validator = new RegexInputValidator();
+var validator = new CompositeInputValidator(numberValidator: new RegexInputValidator());
 
 IInputHandler inputHandler = args.Length > 0
     ? new CommandInputHandler(validator, args)

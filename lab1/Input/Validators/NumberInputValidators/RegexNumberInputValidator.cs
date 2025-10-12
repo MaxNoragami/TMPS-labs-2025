@@ -1,12 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace lab1.Input.Validators;
+namespace lab1.Input.Validators.NumberInputValidators;
 
-public class RegexInputValidator : IInputValidator
+public class RegexInputValidator : INumberInputValidator
 {
-    public string ValidateAlgorithm(string algorithm)
-        => algorithm?.Trim().ToLower() ?? string.Empty;
-
     public List<double> ValidateNumbers(string input)
     {
         var numberMatches = Regex.Matches(input, @"(?<![A-Za-z0-9.-])-?[0-9]+(\.[0-9]+)?(?![A-Za-z0-9.])");
