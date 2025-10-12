@@ -1,7 +1,13 @@
-﻿string? numbersInput = null;
+﻿using lab1;
+using lab1.SortingStrategies;
+
+string? numbersInput = null;
 
 while (string.IsNullOrWhiteSpace(numbersInput))
+{
+    Console.Write("+ Numbers: ");
     numbersInput = Console.ReadLine();
+}
 
 var sanitizedInput = numbersInput.Trim().Split([' ', ','], StringSplitOptions.RemoveEmptyEntries);
 
@@ -16,46 +22,39 @@ foreach (var element in sanitizedInput)
     
 Console.WriteLine(string.Join(",", numbers));
 
-Console.WriteLine("Choose a sorting algorithm:\nBubble\nInsertion\nSelection");
+Console.WriteLine("Choose a sorting algorithm:\nBubble\nInsertion\nSelection\nQuick");
 
 string? algorithmChoice = null;
 
+Console.Write("+ Choice: ");
 while (algorithmChoice == null)
     algorithmChoice = Console.ReadLine()?.Trim().ToLower();
 
-var result = new List<double>();
+var sortingService = new SortingService();
+
 switch (algorithmChoice)
 {
     case "bubble":
-        result = BubbleSort(numbers);
+        Console.WriteLine("Using BubbleSort...");
+        sortingService.SetNumberSortAlgo(new BubbleSort());
         break;
     case "insertion":
-        result = InsertionSort(numbers);
+        Console.WriteLine("Using InsertionSort...");
+        sortingService.SetNumberSortAlgo(new InsertionSort());
         break;
     case "selection":
-        result = SelectionSort(numbers);
+        Console.WriteLine("Using SelectionSort...");
+        sortingService.SetNumberSortAlgo(new SelectionSort());
+        break;
+    case "quick":
+        Console.WriteLine("Using QuickSort...");
+        sortingService.SetNumberSortAlgo(new QuickSort());
         break;
     default:
-        Console.WriteLine("Such algorithm is not implemented yet");
+        Console.WriteLine("Using DefaultSort algorithm...");
         break;
 }
 
+var result = sortingService.Sort(numbers);
+
 Console.WriteLine("Result: {0}", string.Join(", ", result));
-
-
-List<double> BubbleSort(List<double> numbers)
-{
-    Console.WriteLine("BubbleSort was used!");
-    return numbers;
-}
-
-List<double> InsertionSort(List<double> numbers)
-{
-    Console.WriteLine("InsertionSort was used!");
-    return numbers;
-}
-List<double> SelectionSort(List<double> numbers)
-{
-    Console.WriteLine("SelectionSort was used!");
-    return numbers;
-}
