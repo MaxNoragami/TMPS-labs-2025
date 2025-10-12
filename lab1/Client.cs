@@ -2,7 +2,7 @@
 using lab1.Input.Validators;
 using lab1.Sorting;
 
-var validator = new BasicInputValidator();
+var validator = new RegexInputValidator();
 
 IInputHandler inputHandler = args.Length > 0
     ? new CommandInputHandler(validator, args)
