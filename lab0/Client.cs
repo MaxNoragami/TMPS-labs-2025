@@ -17,30 +17,13 @@ if (inputHandler is TerminalInputHandler)
 
 var algorithmChoice = inputHandler.GetAlgorithmChoice();
 
+var factory = new SortAlgorithmFactory();
 var sortingService = new SortingService();
 
-switch (algorithmChoice)
-{
-    case "bubble":
-        Console.WriteLine("Using BubbleSort...");
-        sortingService.SetNumberSortAlgo(new BubbleSort());
-        break;
-    case "insertion":
-        Console.WriteLine("Using InsertionSort...");
-        sortingService.SetNumberSortAlgo(new InsertionSort());
-        break;
-    case "selection":
-        Console.WriteLine("Using SelectionSort...");
-        sortingService.SetNumberSortAlgo(new SelectionSort());
-        break;
-    case "quick":
-        Console.WriteLine("Using QuickSort...");
-        sortingService.SetNumberSortAlgo(new QuickSort());
-        break;
-    default:
-        Console.WriteLine("Using DefaultSort algorithm...");
-        break;
-}
+var (usedAlgorithm, algorithm) = factory.CreateAlgorithm(algorithmChoice);
+sortingService.SetNumberSortAlgo(algorithm);
+
+Console.WriteLine($"Using {usedAlgorithm} sort...");
 
 var result = sortingService.Sort(numbers);
 
