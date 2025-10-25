@@ -1,5 +1,5 @@
 ﻿using lab1.Enums;
-using lab1.Products;
+using lab1.Prototypes;
 
 namespace lab1.Builders;
 
@@ -26,7 +26,7 @@ public class PizzaBuilder : IFoodBuilder
         _extras = [];
     }
 
-    public IProduct Cook()
+    public IPrototype Cook()
     {
         var pizza = new Pizza()
         {

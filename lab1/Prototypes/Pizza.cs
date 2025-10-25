@@ -1,8 +1,8 @@
 ﻿using lab1.Enums;
 
-namespace lab1.Products;
+namespace lab1.Prototypes;
 
-public class Pizza : IProduct
+public class Pizza : IPrototype
 {
     public string Name { get; init; } = string.Empty;
     public FoodSize Size { get; init; }
@@ -11,10 +11,16 @@ public class Pizza : IProduct
     public CheeseType? Cheese { get; init; }
     public List<Extras> Toppings { get; init; } = [];
 
-    public IProduct Clone()
-    {
-        throw new NotImplementedException();
-    }
+    public IPrototype Clone()
+        => new Pizza()
+        {
+            Name = Name,
+            Size = Size,
+            Dough = Dough,
+            Sauce = Sauce,
+            Cheese = Cheese,
+            Toppings = [.. Toppings]
+        };
 
     public override string ToString()
     {
