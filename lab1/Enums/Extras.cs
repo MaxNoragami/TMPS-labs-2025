@@ -1,6 +1,6 @@
 ﻿namespace lab1.Enums;
 
-public enum Toppings
+public enum Extras
 {
     Pepperoni,
     Mushrooms,
