@@ -2,13 +2,14 @@
 using lab1.Domain.Entities;
 using lab1.Domain.Enums;
 using lab1.Application;
+using lab1.Infrastructure;
 
 
 var admin = new User("Alice", Role.Admin);
 var user = new User("Bob", Role.User);
 
-var menuService = new MenuService();
-var userCustomMenu = new CustomMenuService(user);
+var menuService = new MenuService(RegistryFactory.GetMenuRegistry());
+var userCustomMenu = new CustomMenuService(RegistryFactory.CreateUserRegistry(), user);
 
 var margherita = PizzaBuilder.Empty()
 .SetName("Margherita")
