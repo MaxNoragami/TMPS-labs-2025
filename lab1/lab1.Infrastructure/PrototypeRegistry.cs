@@ -1,4 +1,5 @@
-﻿using lab1.Domain.Products;
+﻿using lab1.Application;
+using lab1.Domain.Products;
 
 namespace lab1.Infrastructure;
 

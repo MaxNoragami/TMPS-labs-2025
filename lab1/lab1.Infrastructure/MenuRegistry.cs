@@ -1,5 +1,5 @@
 ﻿using lab1.Domain.Products;
-using lab1.Domain.Enums;
+using lab1.Application;
 
 namespace lab1.Infrastructure;
 

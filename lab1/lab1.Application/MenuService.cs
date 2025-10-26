@@ -1,12 +1,11 @@
 ﻿using lab1.Domain.Entities;
 using lab1.Domain.Products;
-using lab1.Infrastructure;
 
 namespace lab1.Application;
 
-public class MenuService
+public class MenuService(IPrototypeRegistry menuRegistry)
 {
-    private readonly IPrototypeRegistry _menuRegistry = RegistryFactory.GetMenuRegistry();
+    private readonly IPrototypeRegistry _menuRegistry = menuRegistry;
 
     public IPrototype GetDish(string key)
         => _menuRegistry.GetPrototype(key);
