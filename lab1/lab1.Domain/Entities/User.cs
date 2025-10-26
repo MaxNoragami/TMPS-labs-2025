@@ -1,8 +1,6 @@
-﻿using lab1.Enums;
-using lab1.Prototypes;
-using lab1.Prototypes.Registries;
+﻿using lab1.Domain.Enums;
 
-namespace lab1.Entities;
+namespace lab1.Domain.Entities;
 
 public class User(string username, Role role)
 {

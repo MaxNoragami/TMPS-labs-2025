@@ -1,4 +1,4 @@
-﻿namespace lab1.Prototypes;
+﻿namespace lab1.Domain.Products;
 
 public interface IPrototype
 {

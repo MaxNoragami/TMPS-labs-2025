@@ -1,4 +1,4 @@
-﻿namespace lab1.Prototypes.Registries;
+﻿namespace lab1.Infrastructure
 
 public static class RegistryFactory
 {

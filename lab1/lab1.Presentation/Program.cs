@@ -1,7 +1,8 @@
-﻿using lab1.Builders;
-using lab1.Entities;
-using lab1.Enums;
-using lab1.Services;
+﻿using lab1.Domain.Builders;
+using lab1.Domain.Entities;
+using lab1.Domain.Enums;
+using lab1.Application;
+
 
 var admin = new User("Alice", Role.Admin);
 var user = new User("Bob", Role.User);
@@ -10,7 +11,7 @@ var menuService = new MenuService();
 var userCustomMenu = new CustomMenuService(user);
 
 var margherita = PizzaBuilder.Empty()
-    .SetName("Margherita")
+.SetName("Margherita")
     .SetSize(FoodSize.Medium)
     .AddSauce(SauceType.Tomato)
     .AddCheese(CheeseType.Provolone)

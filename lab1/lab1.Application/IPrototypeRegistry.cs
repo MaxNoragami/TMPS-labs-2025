@@ -1,6 +1,6 @@
-﻿using lab1.Entities;
+﻿using lab1.Domain.Products;
 
-namespace lab1.Prototypes.Registries;
+namespace lab1.Application;
 
 public interface IPrototypeRegistry
 {

@@ -1,6 +1,6 @@
-﻿using lab1.Enums;
+﻿using lab1.Domain.Enums;
 
-namespace lab1.Prototypes;
+namespace lab1.Domain.Products;
 
 public class Pizza : IPrototype
 {

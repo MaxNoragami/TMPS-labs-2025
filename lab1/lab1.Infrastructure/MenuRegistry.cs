@@ -1,7 +1,7 @@
-﻿using lab1.Entities;
-using lab1.Enums;
+﻿using lab1.Domain.Products;
+using lab1.Domain.Enums;
 
-namespace lab1.Prototypes.Registries;
+namespace lab1.Infrastructure;
 
 internal sealed class MenuRegistry : IPrototypeRegistry
 {

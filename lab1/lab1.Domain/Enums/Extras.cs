@@ -1,4 +1,4 @@
-﻿namespace lab1.Enums;
+﻿namespace lab1.Domain.Enums;
 
 public enum Extras
 {

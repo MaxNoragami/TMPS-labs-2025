@@ -1,8 +1,8 @@
-﻿using lab1.Entities;
-using lab1.Prototypes;
-using lab1.Prototypes.Registries;
+﻿using lab1.Domain.Entities;
+using lab1.Domain.Products;
+using lab1.Infrastructure;
 
-namespace lab1.Services;
+namespace lab1.Application;
 
 public class MenuService
 {

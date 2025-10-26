@@ -1,7 +1,7 @@
-﻿using lab1.Enums;
-using lab1.Prototypes;
+﻿using lab1.Domain.Enums;
+using lab1.Domain.Products;
 
-namespace lab1.Builders;
+namespace lab1.Domain.Builders;
 
 public interface IFoodBuilder
 {

@@ -1,9 +1,9 @@
-﻿using lab1.Enums;
-using lab1.Prototypes;
+﻿using lab1.Domain.Enums;
+using lab1.Domain.Products;
 
-namespace lab1.Builders;
+namespace lab1.Domain.Builders;
 
-public class CalzoneBuilder : IFoodBuilder
+public class PizzaBuilder : IFoodBuilder
 {
     private string _name = string.Empty;
     private FoodSize _size;
@@ -13,9 +13,9 @@ public class CalzoneBuilder : IFoodBuilder
     private List<Extras> _extras = [];
 
 
-    private CalzoneBuilder() { }
+    private PizzaBuilder() { }
 
-    public static IFoodBuilder Empty() => new CalzoneBuilder();
+    public static IFoodBuilder Empty() => new PizzaBuilder();
     public void Reset()
     {
         _name = string.Empty;
@@ -28,14 +28,14 @@ public class CalzoneBuilder : IFoodBuilder
 
     public IPrototype Cook()
     {
-        var pizza = new Calzone()
+        var pizza = new Pizza()
         {
             Name = _name,
             Size = _size,
             Dough = _dough,
             Sauce = _sauce,
             Cheese = _cheese,
-            Fillings = [.. _extras]
+            Toppings = [.. _extras]
         };
 
         Reset();
