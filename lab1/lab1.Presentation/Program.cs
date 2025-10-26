@@ -9,7 +9,7 @@ var admin = new User("Alice", Role.Admin);
 var user = new User("Bob", Role.User);
 
 var menuService = new MenuService(RegistryFactory.GetMenuRegistry());
-var userCustomMenu = new CustomMenuService(RegistryFactory.CreateUserRegistry(), user);
+var sessionService = new SessionService(RepositoryFactory.GetSessionRepository());
 
 var margherita = PizzaBuilder.Empty()
 .SetName("Margherita")
@@ -26,7 +26,18 @@ var calzoneAmericano = CalzoneBuilder.Empty()
     .AddExtras(Extras.Sausage)
     .Cook();
 
+
+// Log in as Alice
+sessionService.Login(admin, RegistryFactory.CreateUserRegistry);
+
 menuService.RegisterDish("margherita", margherita, admin);
+
+var adminCustomMenu = new CustomMenuService(sessionService.GetCurrentUserRegistry());
+adminCustomMenu.RegisterDish("calzone-americano", calzoneAmericano);
+sessionService.Logout();
+
+// Log in as bob
+sessionService.Login(user, RegistryFactory.CreateUserRegistry);
 
 try
 {
@@ -38,11 +49,14 @@ catch (UnauthorizedAccessException ex)
 }
 
 var anotherMargherita = menuService.GetDish("margherita");
-Console.WriteLine($"User ordered: {anotherMargherita.ToString()}");
-Console.WriteLine($"Same instance? {anotherMargherita.Equals(margherita)}");
 
-userCustomMenu.RegisterDish("calzone-americano", calzoneAmericano);
+var userCustomMenu = new CustomMenuService(sessionService.GetCurrentUserRegistry());
+userCustomMenu.RegisterDish("user-pizza", anotherMargherita);
+userCustomMenu.RegisterDish("user-calzone", calzoneAmericano);
+sessionService.Logout();
 
-var anotherCalzone = userCustomMenu.GetDish("calzone-americano");
-Console.WriteLine($"User ordered: {anotherCalzone.ToString()}");
-Console.WriteLine($"Same instance? {anotherCalzone.Equals(calzoneAmericano)}");
+// relogin as user
+sessionService.Login(user, RegistryFactory.CreateUserRegistry);
+var userCustomMenuAgain = new CustomMenuService(sessionService.GetCurrentUserRegistry());
+var userPizza = userCustomMenuAgain.GetDish("user-pizza");
+Console.Write($"{userPizza.ToString()}");
