@@ -1,43 +1,46 @@
 ﻿using lab1.Builders;
+using lab1.Entities;
 using lab1.Enums;
-using lab1.Prototypes;
+using lab1.Services;
 
-var pizza = PizzaBuilder.Empty()
+var admin = new User("Alice", Role.Admin);
+var user = new User("Bob", Role.User);
+
+var menuService = new MenuService();
+var userCustomMenu = new CustomMenuService(user);
+
+var margherita = PizzaBuilder.Empty()
     .SetName("Margherita")
-    .SetSize(FoodSize.Large)
-    .SetDough(DoughType.Sicilian)
-    .AddCheese(CheeseType.Gorgonzola)
-    .AddExtras(Extras.Artichokes)
+    .SetSize(FoodSize.Medium)
+    .AddSauce(SauceType.Tomato)
+    .AddCheese(CheeseType.Provolone)
     .AddExtras(Extras.Spinach)
-    .AddExtras(Extras.Zucchini)
     .Cook();
 
-var calzone = CalzoneBuilder.Empty()
-    .SetName("SausageAndSpinach")
-    .SetSize(FoodSize.Medium)
-    .SetDough(DoughType.GlutenFree)
+var calzoneAmericano = CalzoneBuilder.Empty()
+    .SetName("CalzoneAmericano")
+    .SetSize(FoodSize.Large)
     .AddSauce(SauceType.Alfredo)
     .AddExtras(Extras.Sausage)
-    .AddExtras(Extras.Spinach)
     .Cook();
 
-Console.WriteLine(pizza.ToString());
-Console.WriteLine(pizza.GetType());
+menuService.RegisterDish("margherita", margherita, admin);
 
-Console.WriteLine(calzone.ToString());
-Console.WriteLine(calzone.GetType());
+try
+{
+    menuService.RegisterDish("another-margherita", margherita, user);
+}
+catch (UnauthorizedAccessException ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
 
-var menu = new PrototypeRegistry();
-var chef = new PrototypeFactory(menu);
+var anotherMargherita = menuService.GetDish("margherita");
+Console.WriteLine($"User ordered: {anotherMargherita.ToString()}");
+Console.WriteLine($"Same instance? {anotherMargherita.Equals(margherita)}");
 
-menu.Register("Margherita", pizza);
-menu.Register("AmericanCalzone", calzone);
+userCustomMenu.RegisterDish("calzone-americano", calzoneAmericano);
 
-var pizza2 = chef.Create("margherita ");
-var calzone2 = chef.Create("  aMericanCalzone");
-
-Console.WriteLine(pizza2.ToString());
-Console.WriteLine(pizza2.GetType());
-
-Console.WriteLine(calzone2.ToString());
-Console.WriteLine(calzone2.GetType());
+var anotherCalzone = userCustomMenu.GetDish("calzone-americano");
+Console.WriteLine($"User ordered: {anotherCalzone.ToString()}");
+Console.WriteLine($"Same instance? {anotherCalzone.Equals(calzoneAmericano)}");

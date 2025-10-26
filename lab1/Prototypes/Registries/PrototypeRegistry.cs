@@ -1,12 +1,8 @@
-﻿namespace lab1.Prototypes;
+﻿using lab1.Entities;
 
-public interface IPrototypeRegistry
-{
-    void Register(string key, IPrototype prototype);
-    IPrototype GetPrototype(string key);
-}
+namespace lab1.Prototypes.Registries;
 
-public class PrototypeRegistry : IPrototypeRegistry
+internal sealed class PrototypeRegistry : IPrototypeRegistry
 {
     private readonly Dictionary<string, IPrototype> _prototypes = new();
 
@@ -15,6 +11,6 @@ public class PrototypeRegistry : IPrototypeRegistry
 
     public IPrototype GetPrototype(string key)
         => _prototypes.TryGetValue(key.Trim().ToLower(), out IPrototype? prototype)
-            ? prototype
+            ? prototype.Clone()
             : throw new ArgumentException("Prototype not found");
 }
