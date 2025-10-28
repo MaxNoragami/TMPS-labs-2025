@@ -18,4 +18,7 @@ public class MenuService(IPrototypeRegistry menuRegistry)
 
         _menuRegistry.Register(key, prototype);
     }
+
+    public List<string> GetAllDishKeys()
+        => _menuRegistry.GetAllKeys();
 }

@@ -25,4 +25,10 @@ internal sealed class MenuRegistry : IPrototypeRegistry
                 ? prototype.Clone()
                 : throw new ArgumentException("Prototype not found");
     }
+
+    public List<string> GetAllKeys()
+    {
+        lock (_lock)
+            return _prototypes.Keys.ToList();
+    }
 }

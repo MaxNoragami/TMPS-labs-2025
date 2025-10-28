@@ -11,4 +11,7 @@ public class CustomMenuService(IPrototypeRegistry customRegistry)
 
     public IPrototype GetDish(string key)
         => _customRegistry.GetPrototype(key);
+
+    public List<string> GetAllDishKeys()
+        => _customRegistry.GetAllKeys();
 }

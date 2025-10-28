@@ -6,4 +6,5 @@ public interface IPrototypeRegistry
 {
     void Register(string key, IPrototype prototype);
     IPrototype GetPrototype(string key);
+    List<string> GetAllKeys();
 }

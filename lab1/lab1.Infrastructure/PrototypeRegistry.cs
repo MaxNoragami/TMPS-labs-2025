@@ -14,4 +14,7 @@ internal sealed class PrototypeRegistry : IPrototypeRegistry
         => _prototypes.TryGetValue(key.Trim().ToLower(), out IPrototype? prototype)
             ? prototype.Clone()
             : throw new ArgumentException("Prototype not found");
+
+    public List<string> GetAllKeys()
+        => _prototypes.Keys.ToList();
 }
