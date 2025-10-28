@@ -4,7 +4,7 @@ using lab1.Presentation.Views;
 
 namespace lab1.Presentation.Handlers;
 
-public class DishCreator(IMenuView view)
+public class DishInputHandler(IMenuView view)
 {
     private readonly IMenuView _view = view;
 
@@ -41,9 +41,7 @@ public class DishCreator(IMenuView view)
             builder.AddCheese(cheese.Value);
 
         foreach (var extra in extras)
-        {
             builder.AddExtras(extra);
-        }
 
         return builder.Cook();
     }

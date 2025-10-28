@@ -10,14 +10,16 @@ public class MainProcess(
         IMenuView view,
         MenuService menuService,
         SessionService sessionService,
-        DishCreator dishFactory,
+        DishInputHandler dishInputHandler,
+        DishDirector dishDirector,
         Func<IPrototypeRegistry> registryFactory,
         List<User> availableUsers)
 {
     private readonly IMenuView _view = view;
     private readonly MenuService _menuService = menuService;
     private readonly SessionService _sessionService = sessionService;
-    private readonly DishCreator _dishFactory = dishFactory;
+    private readonly DishInputHandler _dishInputHandler = dishInputHandler;
+    private readonly DishDirector _dishDirector = dishDirector;
     private readonly Func<IPrototypeRegistry> _registryFactory = registryFactory;
     private readonly List<User> _availableUsers = availableUsers;
 
@@ -120,10 +122,7 @@ public class MainProcess(
                 var dish = getDish(key);
                 items[key] = dish.ToString();
             }
-            catch
-            {
-                // Skip items that can't be retrieved
-            }
+            catch { /* Skip item that cannot be retrieved */ }
         }
 
         return items;
@@ -170,8 +169,8 @@ public class MainProcess(
 
         IPrototype dish = choice switch
         {
-            "1" => _dishFactory.CreatePizza(),
-            "2" => _dishFactory.CreateCalzone(),
+            "1" => _dishInputHandler.CreatePizza(),
+            "2" => _dishInputHandler.CreateCalzone(),
             _ => throw new ArgumentException("Invalid dish type")
         };
 
@@ -220,9 +219,13 @@ public class MainProcess(
         }
 
         Console.WriteLine("\nAdd:");
-        Console.WriteLine("1. New Pizza");
-        Console.WriteLine("2. New Calzone");
-        Console.WriteLine("3. From Custom Menu");
+        Console.WriteLine("1. Standard Margherita");
+        Console.WriteLine("2. Standard Pepperoni");
+        Console.WriteLine("3. Standard Hawaiian");
+        Console.WriteLine("4. Standard Calzone Americano");
+        Console.WriteLine("5. Custom Pizza");
+        Console.WriteLine("6. Custom Calzone");
+        Console.WriteLine("7. From Custom Menu");
         Console.Write("Choice: ");
 
         var choice = Console.ReadLine();
@@ -232,24 +235,19 @@ public class MainProcess(
             IPrototype dish;
             string key;
 
-            if (choice == "3")
+            dish = choice switch
             {
-                var customKey = _view.GetInput("Enter dish key from your custom menu");
-                var customService = new CustomMenuService(_sessionService.GetCurrentUserRegistry());
-                dish = customService.GetDish(customKey);
-                key = _view.GetInput("Enter key for global menu");
-            }
-            else
-            {
-                dish = choice switch
-                {
-                    "1" => _dishFactory.CreatePizza(),
-                    "2" => _dishFactory.CreateCalzone(),
-                    _ => throw new ArgumentException("Invalid choice")
-                };
-                key = _view.GetInput("Enter key for global menu");
-            }
+                "1" => _dishDirector.ConstructMargherita(),
+                "2" => _dishDirector.ConstructPepperoni(),
+                "3" => _dishDirector.ConstructHawaiian(),
+                "4" => _dishDirector.ConstructCalzoneAmericano(),
+                "5" => _dishInputHandler.CreatePizza(),
+                "6" => _dishInputHandler.CreateCalzone(),
+                "7" => GetDishFromCustomMenu(),
+                _ => throw new ArgumentException("Invalid choice")
+            };
 
+            key = _view.GetInput("Enter key for global menu");
             _menuService.RegisterDish(key, dish, _sessionService.CurrentUser);
             _view.DisplayMessage($"Added to global menu as '{key}'");
         }
@@ -259,6 +257,13 @@ public class MainProcess(
         }
 
         return true;
+    }
+
+    private IPrototype GetDishFromCustomMenu()
+    {
+        var customKey = _view.GetInput("Enter dish key from your custom menu");
+        var customService = new CustomMenuService(_sessionService.GetCurrentUserRegistry());
+        return customService.GetDish(customKey);
     }
 
     private bool HandleSwitchUser()
