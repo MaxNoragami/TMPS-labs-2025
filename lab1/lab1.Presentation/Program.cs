@@ -1,5 +1,4 @@
 ﻿using lab1.Application;
-using lab1.Domain.Builders;
 using lab1.Domain.Entities;
 using lab1.Domain.Enums;
 using lab1.Infrastructure;
@@ -7,20 +6,16 @@ using lab1.Presentation.Processes;
 using lab1.Presentation.Handlers;
 using lab1.Presentation.Views;
 
-// Initialize infrastructure
 var menuRegistry = RegistryFactory.GetMenuRegistry();
 var sessionRepository = RepositoryFactory.GetSessionRepository();
 
-// Initialize services
 var menuService = new MenuService(menuRegistry);
 var sessionService = new SessionService(sessionRepository);
 var dishDirector = new DishDirector();
 
-// Initialize presentation layer
 var view = new ConsoleMenuView();
 var dishInputHandler = new DishInputHandler(view);
 
-// Create available users
 var users = new List<User>
 {
     new User("Alice", Role.Admin),
@@ -28,7 +23,6 @@ var users = new List<User>
     new User("Charlie", Role.User)
 };
 
-// Seed initial menu with some dishes
 var admin = users.First(u => u.IsAdmin);
 sessionService.Login(admin, RegistryFactory.CreateUserRegistry);
 
@@ -44,7 +38,6 @@ menuService.RegisterDish("calzone-americano", calzoneAmericano, admin);
 
 sessionService.Logout();
 
-// Initialize and run controller
 var mainProcess = new MainProcess(
     view,
     menuService,

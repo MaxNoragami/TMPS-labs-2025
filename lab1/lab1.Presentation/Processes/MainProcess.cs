@@ -120,7 +120,7 @@ public class MainProcess(
             try
             {
                 var dish = getDish(key);
-                items[key] = dish.ToString();
+                items[key] = dish.ToString()!;
             }
             catch { /* Skip item that cannot be retrieved */ }
         }
@@ -148,7 +148,7 @@ public class MainProcess(
             };
 
             _view.DisplayMessage("Order placed successfully!");
-            _view.DisplayDish(dish.ToString());
+            _view.DisplayDish(dish.ToString()!);
         }
         catch (ArgumentException ex)
         {
@@ -175,7 +175,7 @@ public class MainProcess(
         };
 
         _view.DisplayMessage("Dish created successfully!");
-        _view.DisplayDish(dish.ToString());
+        _view.DisplayDish(dish.ToString()!);
 
         if (_view.GetConfirmation("Add to custom menu?"))
         {
@@ -274,7 +274,7 @@ public class MainProcess(
 
     private bool HandleExit()
     {
-        _view.DisplayMessage("Thank you for visiting Pizza Paradise!");
+        _view.DisplayMessage("Thank you for visiting Papa's Pizzeria! ;3");
         return false;
     }
 
