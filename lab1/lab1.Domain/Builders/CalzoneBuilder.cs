@@ -12,10 +12,10 @@ public class CalzoneBuilder : IFoodBuilder
     private CheeseType? _cheese;
     private List<Extras> _extras = [];
 
-
     private CalzoneBuilder() { }
 
-    public static IFoodBuilder Empty() => new CalzoneBuilder();
+    public static CalzoneBuilder Empty() => new CalzoneBuilder();
+
     public void Reset()
     {
         _name = string.Empty;
@@ -26,9 +26,9 @@ public class CalzoneBuilder : IFoodBuilder
         _extras = [];
     }
 
-    public IPrototype Cook()
+    public Calzone Cook()
     {
-        var pizza = new Calzone()
+        var calzone = new Calzone()
         {
             Name = _name,
             Size = _size,
@@ -39,8 +39,7 @@ public class CalzoneBuilder : IFoodBuilder
         };
 
         Reset();
-
-        return pizza;
+        return calzone;
     }
 
     public IFoodBuilder SetName(string name)

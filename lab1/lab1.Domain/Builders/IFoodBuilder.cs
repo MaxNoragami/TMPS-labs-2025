@@ -11,6 +11,5 @@ public interface IFoodBuilder
     IFoodBuilder AddSauce(SauceType sauce);
     IFoodBuilder AddCheese(CheeseType cheese);
     IFoodBuilder AddExtras(Extras extras);
-    IPrototype Cook();
     void Reset();
 }

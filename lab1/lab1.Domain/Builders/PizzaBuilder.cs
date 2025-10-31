@@ -12,10 +12,10 @@ public class PizzaBuilder : IFoodBuilder
     private CheeseType? _cheese;
     private List<Extras> _extras = [];
 
-
     private PizzaBuilder() { }
 
-    public static IFoodBuilder Empty() => new PizzaBuilder();
+    public static PizzaBuilder Empty() => new PizzaBuilder();
+
     public void Reset()
     {
         _name = string.Empty;
@@ -26,7 +26,7 @@ public class PizzaBuilder : IFoodBuilder
         _extras = [];
     }
 
-    public IPrototype Cook()
+    public Pizza Cook()
     {
         var pizza = new Pizza()
         {
@@ -39,7 +39,6 @@ public class PizzaBuilder : IFoodBuilder
         };
 
         Reset();
-
         return pizza;
     }
 

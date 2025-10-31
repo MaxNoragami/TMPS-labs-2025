@@ -1,87 +1,67 @@
 ﻿using lab1.Domain.Builders;
 using lab1.Domain.Enums;
-using lab1.Domain.Products;
 
 namespace lab1.Application;
 
 public class DishDirector
 {
-    public IPrototype ConstructMargherita() =>
-        ConstructPizza(
-            "Margherita",
-            FoodSize.Medium,
-            DoughType.Classic,
-            SauceType.Tomato,
-            CheeseType.Provolone,
-            [Extras.Spinach]);
+    private IFoodBuilder? _builder;
 
-    public IPrototype ConstructPepperoni() =>
-        ConstructPizza(
-            "Pepperoni",
-            FoodSize.Large,
-            DoughType.Classic,
-            SauceType.Tomato,
-            CheeseType.Cheddar,
-            [Extras.Pepperoni, Extras.Olives]);
+    public void SetBuilder(IFoodBuilder builder)
+        => _builder = builder;
 
-    public IPrototype ConstructHawaiian() =>
-        ConstructPizza(
-            "Hawaiian",
-            FoodSize.Medium,
-            DoughType.Classic,
-            SauceType.Tomato,
-            CheeseType.Provolone,
-            [Extras.Ham, Extras.Pineapple]);
-
-    public IPrototype ConstructCalzoneAmericano() =>
-        ConstructCalzone(
-            "Americano",
-            FoodSize.Large,
-            DoughType.Sicilian,
-            SauceType.Alfredo,
-            CheeseType.Cheddar,
-            [Extras.Sausage, Extras.Bacon]);
-
-    private IPrototype ConstructPizza(
-        string name,
-        FoodSize size,
-        DoughType dough,
-        SauceType? sauce,
-        CheeseType? cheese,
-        List<Extras> extras)
-        => ConstructDish(PizzaBuilder.Empty(), name, size, dough, sauce, cheese, extras);
-
-    private IPrototype ConstructCalzone(
-        string name,
-        FoodSize size,
-        DoughType dough,
-        SauceType? sauce,
-        CheeseType? cheese,
-        List<Extras> extras)
-        => ConstructDish(CalzoneBuilder.Empty(), name, size, dough, sauce, cheese, extras);
-
-    private IPrototype ConstructDish(
-        IFoodBuilder builder,
-        string name,
-        FoodSize size,
-        DoughType dough,
-        SauceType? sauce,
-        CheeseType? cheese,
-        List<Extras> extras)
+    public void ConstructMargherita()
     {
-        builder.SetName(name)
-            .SetSize(size)
-            .SetDough(dough);
+        if (_builder == null)
+            throw new InvalidOperationException("Builder not set. Call SetBuilder() first.");
 
-        if (sauce.HasValue)
-            builder.AddSauce(sauce.Value);
+        _builder.SetName("Margherita")
+                .SetSize(FoodSize.Medium)
+                .SetDough(DoughType.Classic)
+                .AddSauce(SauceType.Tomato)
+                .AddCheese(CheeseType.Provolone)
+                .AddExtras(Extras.Spinach);
+    }
 
-        if (cheese.HasValue)
-            builder.AddCheese(cheese.Value);
+    public void ConstructPepperoni()
+    {
+        if (_builder == null)
+            throw new InvalidOperationException("Builder not set. Call SetBuilder() first.");
 
-        foreach (var extra in extras)
-            builder.AddExtras(extra);
+        _builder.SetName("Pepperoni")
+                .SetSize(FoodSize.Large)
+                .SetDough(DoughType.Classic)
+                .AddSauce(SauceType.Tomato)
+                .AddCheese(CheeseType.Cheddar)
+                .AddExtras(Extras.Pepperoni)
+                .AddExtras(Extras.Olives);
+    }
 
-        return builder.Cook();
+    public void ConstructHawaiian()
+    {
+        if (_builder == null)
+            throw new InvalidOperationException("Builder not set. Call SetBuilder() first.");
+
+        _builder.SetName("Hawaiian")
+                .SetSize(FoodSize.Medium)
+                .SetDough(DoughType.Classic)
+                .AddSauce(SauceType.Tomato)
+                .AddCheese(CheeseType.Provolone)
+                .AddExtras(Extras.Ham)
+                .AddExtras(Extras.Pineapple);
+    }
+
+    public void ConstructCalzoneAmericano()
+    {
+        if (_builder == null)
+            throw new InvalidOperationException("Builder not set. Call SetBuilder() first.");
+
+        _builder.SetName("Americano")
+                .SetSize(FoodSize.Large)
+                .SetDough(DoughType.Sicilian)
+                .AddSauce(SauceType.Alfredo)
+                .AddCheese(CheeseType.Cheddar)
+                .AddExtras(Extras.Sausage)
+                .AddExtras(Extras.Bacon);
     }
 }
