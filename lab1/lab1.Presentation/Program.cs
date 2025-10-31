@@ -1,4 +1,5 @@
 ﻿using lab1.Application;
+using lab1.Domain.Builders;
 using lab1.Domain.Entities;
 using lab1.Domain.Enums;
 using lab1.Infrastructure;
@@ -26,15 +27,30 @@ var users = new List<User>
 var admin = users.First(u => u.IsAdmin);
 sessionService.Login(admin, RegistryFactory.CreateUserRegistry);
 
-var margherita = dishDirector.ConstructMargherita();
-var pepperoni = dishDirector.ConstructPepperoni();
-var hawaiian = dishDirector.ConstructHawaiian();
-var calzoneAmericano = dishDirector.ConstructCalzoneAmericano();
 
+var pizzaBuilder = PizzaBuilder.Empty();
+dishDirector.SetBuilder(pizzaBuilder);
+
+dishDirector.ConstructMargherita();
+var margherita = pizzaBuilder.Cook();
 menuService.RegisterDish("margherita", margherita, admin);
+
+dishDirector.ConstructPepperoni();
+var pepperoni = pizzaBuilder.Cook();
 menuService.RegisterDish("pepperoni", pepperoni, admin);
+
+dishDirector.ConstructHawaiian();
+var hawaiian = pizzaBuilder.Cook();
 menuService.RegisterDish("hawaiian", hawaiian, admin);
+
+
+var calzoneBuilder = CalzoneBuilder.Empty();
+dishDirector.SetBuilder(calzoneBuilder);
+
+dishDirector.ConstructCalzoneAmericano();
+var calzoneAmericano = calzoneBuilder.Cook();
 menuService.RegisterDish("calzone-americano", calzoneAmericano, admin);
+
 
 sessionService.Logout();
 

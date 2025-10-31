@@ -8,22 +8,46 @@ public class DishInputHandler(IMenuView view)
 {
     private readonly IMenuView _view = view;
 
-
-    public IPrototype CreatePizza()
+    public Pizza CreatePizza()
     {
         var builder = PizzaBuilder.Empty();
-        return BuildDish(builder, "Pizza");
+        return BuildPizza(builder);
     }
 
-    public IPrototype CreateCalzone()
+    public Calzone CreateCalzone()
     {
         var builder = CalzoneBuilder.Empty();
-        return BuildDish(builder, "Calzone");
+        return BuildCalzone(builder);
     }
 
-    private IPrototype BuildDish(IFoodBuilder builder, string dishType)
+    private Pizza BuildPizza(PizzaBuilder builder)
     {
-        var name = _view.GetInput($"Enter {dishType} name");
+        var name = _view.GetInput("Enter Pizza name");
+        var size = _view.GetFoodSize();
+        var dough = _view.GetDoughType();
+        var sauce = _view.GetSauceType();
+        var cheese = _view.GetCheeseType();
+        var extras = _view.GetExtras();
+
+        builder.SetName(name)
+               .SetSize(size)
+               .SetDough(dough);
+
+        if (sauce.HasValue)
+            builder.AddSauce(sauce.Value);
+
+        if (cheese.HasValue)
+            builder.AddCheese(cheese.Value);
+
+        foreach (var extra in extras)
+            builder.AddExtras(extra);
+
+        return builder.Cook();
+    }
+
+    private Calzone BuildCalzone(CalzoneBuilder builder)
+    {
+        var name = _view.GetInput("Enter Calzone name");
         var size = _view.GetFoodSize();
         var dough = _view.GetDoughType();
         var sauce = _view.GetSauceType();

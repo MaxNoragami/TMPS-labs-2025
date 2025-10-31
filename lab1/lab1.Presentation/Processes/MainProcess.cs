@@ -3,6 +3,7 @@ using lab1.Domain.Entities;
 using lab1.Domain.Products;
 using lab1.Presentation.Views;
 using lab1.Presentation.Handlers;
+using lab1.Domain.Builders;
 
 namespace lab1.Presentation.Processes;
 
@@ -235,17 +236,44 @@ public class MainProcess(
             IPrototype dish;
             string key;
 
-            dish = choice switch
+            switch (choice)
             {
-                "1" => _dishDirector.ConstructMargherita(),
-                "2" => _dishDirector.ConstructPepperoni(),
-                "3" => _dishDirector.ConstructHawaiian(),
-                "4" => _dishDirector.ConstructCalzoneAmericano(),
-                "5" => _dishInputHandler.CreatePizza(),
-                "6" => _dishInputHandler.CreateCalzone(),
-                "7" => GetDishFromCustomMenu(),
-                _ => throw new ArgumentException("Invalid choice")
-            };
+                case "1":
+                    var pizzaBuilder1 = PizzaBuilder.Empty();
+                    _dishDirector.SetBuilder(pizzaBuilder1);
+                    _dishDirector.ConstructMargherita();
+                    dish = pizzaBuilder1.Cook();
+                    break;
+                case "2":
+                    var pizzaBuilder2 = PizzaBuilder.Empty();
+                    _dishDirector.SetBuilder(pizzaBuilder2);
+                    _dishDirector.ConstructPepperoni();
+                    dish = pizzaBuilder2.Cook();
+                    break;
+                case "3":
+                    var pizzaBuilder3 = PizzaBuilder.Empty();
+                    _dishDirector.SetBuilder(pizzaBuilder3);
+                    _dishDirector.ConstructHawaiian();
+                    dish = pizzaBuilder3.Cook();
+                    break;
+                case "4":
+                    var calzoneBuilder = CalzoneBuilder.Empty();
+                    _dishDirector.SetBuilder(calzoneBuilder);
+                    _dishDirector.ConstructCalzoneAmericano();
+                    dish = calzoneBuilder.Cook();
+                    break;
+                case "5":
+                    dish = _dishInputHandler.CreatePizza();
+                    break;
+                case "6":
+                    dish = _dishInputHandler.CreateCalzone();
+                    break;
+                case "7":
+                    dish = GetDishFromCustomMenu();
+                    break;
+                default:
+                    throw new ArgumentException("Invalid choice");
+            }
 
             key = _view.GetInput("Enter key for global menu");
             _menuService.RegisterDish(key, dish, _sessionService.CurrentUser);
