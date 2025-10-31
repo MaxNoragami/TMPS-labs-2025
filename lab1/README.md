@@ -133,7 +133,6 @@ public interface IFoodBuilder
     IFoodBuilder AddSauce(SauceType sauce);
     IFoodBuilder AddCheese(CheeseType cheese);
     IFoodBuilder AddExtras(Extras extras);
-    IPrototype Cook();
     void Reset();
 }
 ```
@@ -156,7 +155,7 @@ public class PizzaBuilder : IFoodBuilder
 
     public static IFoodBuilder Empty() => new PizzaBuilder();
 
-    public IPrototype Cook()
+    public Pizza Cook()
     {
         var pizza = new Pizza()
         {
@@ -188,27 +187,101 @@ The `PizzaBuilder` encapsulates the construction logic, maintaining internal sta
 ```csharp
 public class DishDirector
 {
-    public IPrototype ConstructMargherita() =>
-        ConstructPizza(
-            "Margherita",
-            FoodSize.Medium,
-            DoughType.Classic,
-            SauceType.Tomato,
-            CheeseType.Provolone,
-            [Extras.Spinach]);
+    private IFoodBuilder? _builder;
 
-    private IPrototype ConstructPizza(
-        string name,
-        FoodSize size,
-        DoughType dough,
-        SauceType? sauce,
-        CheeseType? cheese,
-        List<Extras> extras)
+    public void SetBuilder(IFoodBuilder builder)
+        => _builder = builder;
+
+    public void ConstructMargherita()
     {
-        var builder = PizzaBuilder.Empty()
-            .SetName(name)
-            .SetSize(size)
-            .SetDough(dough);
+        if (_builder == null)
+            throw new InvalidOperationException("Builder not set. Call SetBuilder() first.");
+
+        _builder.SetName("Margherita")
+                .SetSize(FoodSize.Medium)
+                .SetDough(DoughType.Classic)
+                .AddSauce(SauceType.Tomato)
+                .AddCheese(CheeseType.Provolone)
+                .AddExtras(Extras.Spinach);
+    }
+
+    public void ConstructPepperoni()
+    {
+        if (_builder == null)
+            throw new InvalidOperationException("Builder not set. Call SetBuilder() first.");
+
+        _builder.SetName("Pepperoni")
+                .SetSize(FoodSize.Large)
+                .SetDough(DoughType.Classic)
+                .AddSauce(SauceType.Tomato)
+                .AddCheese(CheeseType.Cheddar)
+                .AddExtras(Extras.Pepperoni)
+                .AddExtras(Extras.Olives);
+    }
+
+    public void ConstructHawaiian()
+    {
+        if (_builder == null)
+            throw new InvalidOperationException("Builder not set. Call SetBuilder() first.");
+
+        _builder.SetName("Hawaiian")
+                .SetSize(FoodSize.Medium)
+                .SetDough(DoughType.Classic)
+                .AddSauce(SauceType.Tomato)
+                .AddCheese(CheeseType.Provolone)
+                .AddExtras(Extras.Ham)
+                .AddExtras(Extras.Pineapple);
+    }
+
+    public void ConstructCalzoneAmericano()
+    {
+        if (_builder == null)
+            throw new InvalidOperationException("Builder not set. Call SetBuilder() first.");
+
+        _builder.SetName("Americano")
+                .SetSize(FoodSize.Large)
+                .SetDough(DoughType.Sicilian)
+                .AddSauce(SauceType.Alfredo)
+                .AddCheese(CheeseType.Cheddar)
+                .AddExtras(Extras.Sausage)
+                .AddExtras(Extras.Bacon);
+    }
+}
+```
+
+The `DishDirector` encapsulates pre-defined recipes and construction sequences. It hides the building complexity from clients and provides a convenient API for creating standard dishes. The director demonstrates how the same builder can be used to create different product configurations.
+
+#### Usage in Presentation Layer
+
+```csharp
+public class DishInputHandler(IMenuView view)
+{
+    private readonly IMenuView _view = view;
+
+    public Pizza CreatePizza()
+    {
+        var builder = PizzaBuilder.Empty();
+        return BuildPizza(builder);
+    }
+
+    public Calzone CreateCalzone()
+    {
+        var builder = CalzoneBuilder.Empty();
+        return BuildCalzone(builder);
+    }
+
+    private Pizza BuildPizza(PizzaBuilder builder)
+    {
+        var name = _view.GetInput("Enter Pizza name");
+        var size = _view.GetFoodSize();
+        var dough = _view.GetDoughType();
+        var sauce = _view.GetSauceType();
+        var cheese = _view.GetCheeseType();
+        var extras = _view.GetExtras();
+
+        builder.SetName(name)
+               .SetSize(size)
+               .SetDough(dough);
 
         if (sauce.HasValue)
             builder.AddSauce(sauce.Value);
@@ -221,36 +294,29 @@ public class DishDirector
 
         return builder.Cook();
     }
-}
-```
 
-The `DishDirector` encapsulates pre-defined recipes and construction sequences. It hides the building complexity from clients and provides a convenient API for creating standard dishes. The director demonstrates how the same builder can be used to create different product configurations.
-
-#### Usage in Presentation Layer
-
-```csharp
-public class DishInputHandler
-{
-    private readonly IMenuView _view;
-
-    public IPrototype CreatePizza()
+    private Calzone BuildCalzone(CalzoneBuilder builder)
     {
-        var builder = PizzaBuilder.Empty();
-        return BuildDish(builder, "Pizza");
-    }
-
-    private IPrototype BuildDish(IFoodBuilder builder, string dishType)
-    {
-        var name = _view.GetInput($"Enter {dishType} name");
+        var name = _view.GetInput("Enter Calzone name");
         var size = _view.GetFoodSize();
         var dough = _view.GetDoughType();
-        
+        var sauce = _view.GetSauceType();
+        var cheese = _view.GetCheeseType();
+        var extras = _view.GetExtras();
+
         builder.SetName(name)
                .SetSize(size)
                .SetDough(dough);
-        
-        // Add optional ingredients based on user input
-        
+
+        if (sauce.HasValue)
+            builder.AddSauce(sauce.Value);
+
+        if (cheese.HasValue)
+            builder.AddCheese(cheese.Value);
+
+        foreach (var extra in extras)
+            builder.AddExtras(extra);
+
         return builder.Cook();
     }
 }
