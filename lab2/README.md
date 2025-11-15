@@ -1,0 +1,1 @@
+This is the Report for the 2nd lab on Structural Design Patterns!
