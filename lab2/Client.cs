@@ -1,1 +1,1 @@
-﻿Console.WriteLine("Lab2 - Structural Design Patterns!");
+﻿
