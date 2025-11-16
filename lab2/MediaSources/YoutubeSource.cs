@@ -11,8 +11,16 @@ public class YoutubeSource : IMediaSource
     public async Task<string> GetVideoAsync(string sourceUrl)
     {
         var formattedUrl = FormatUrl(sourceUrl);
-        return await ExecuteYtDlpCommand($"-f best --get-url {formattedUrl}");
+
+        const string formatSelector =
+
+            "best[ext=mp4][vcodec!=none][acodec!=none]" +
+            "[protocol!=m3u8][protocol!=m3u8_native]";
+
+        var args = $"-f \"{formatSelector}\" --get-url {formattedUrl}";
+        return await ExecuteYtDlpCommand(args);
     }
+
 
     public async Task<string> GetMetadataAsync(string sourceUrl)
     {

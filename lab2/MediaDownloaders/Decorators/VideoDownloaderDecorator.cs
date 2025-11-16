@@ -5,6 +5,6 @@ public abstract class VideoDownloaderDecorator(IVideoDownloader downloader) : IV
 {
     protected readonly IVideoDownloader _downloader = downloader;
 
-    public async Task DownloadAsync(string sourceUrl, string outputPath)
+    public virtual async Task DownloadAsync(string sourceUrl, string outputPath)
         => await _downloader.DownloadAsync(sourceUrl, outputPath);
 }
