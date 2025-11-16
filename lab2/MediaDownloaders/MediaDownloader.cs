@@ -8,7 +8,4 @@ public abstract class MediaDownloader(IMediaSource mediaSource)
 
 
     public abstract Task DownloadAsync(string sourceUrl, string outputPath);
-
-    protected virtual async Task<Dictionary<string, object>> GetMetadataAsync(string sourceUrl)
-        => await mediaSource.GetMetadataAsync(sourceUrl);
 }

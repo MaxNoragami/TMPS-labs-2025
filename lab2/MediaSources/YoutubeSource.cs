@@ -10,20 +10,9 @@ public class YoutubeSource : IMediaSource
         return await ExecuteYtDlpCommand($"-f best --get-url {sourceUrl}");
     }
 
-    public async Task<string> GetAudioAsync(string sourceUrl)
-    {
-        return await ExecuteYtDlpCommand($"-f bestaudio --get-url {sourceUrl}");
-    }
-
     public async Task<string> GetThumbnailAsync(string sourceUrl)
     {
         return await ExecuteYtDlpCommand($"--get-thumbnail {sourceUrl}");
-    }
-
-    public async Task<Dictionary<string, object>> GetMetadataAsync(string sourceUrl)
-    {
-        var jsonOutput = await ExecuteYtDlpCommand($"-j {sourceUrl}");
-        return JsonSerializer.Deserialize<Dictionary<string, object>>(jsonOutput) ?? new();
     }
 
     private async Task<string> ExecuteYtDlpCommand(string arguments)

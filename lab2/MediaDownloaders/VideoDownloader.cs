@@ -4,14 +4,14 @@ namespace lab2.MediaDownloaders;
 
 public class VideoDownloader(IMediaSource mediaSource) : MediaDownloader(mediaSource)
 {
-    public override Task DownloadAsync(string sourceUrl, string outputPath)
+    public override async Task DownloadAsync(string sourceUrl, string outputPath)
     {
-        throw new NotImplementedException();
-    }
+        var directVideoUrl = await mediaSource.GetVideoAsync(sourceUrl);
 
-    protected override async Task<Dictionary<string, object>> GetMetadataAsync(string sourceUrl)
-    {
-        var metadata = await base.GetMetadataAsync(sourceUrl);
-        throw new NotImplementedException();
+        using var httpClient = new HttpClient();
+        var videoBytes = await httpClient.GetByteArrayAsync(directVideoUrl);
+        await File.WriteAllBytesAsync(outputPath, videoBytes);
+
+        Console.WriteLine($"Downloaded video to: {outputPath}");
     }
 }

@@ -4,6 +4,7 @@ namespace lab2.MediaSources;
 
 public class RedditSource : IMediaSource
 {
+
     // public static async Task Test(string url)
     // {
     //     var config = Configuration.Default.WithDefaultLoader();
@@ -15,16 +16,6 @@ public class RedditSource : IMediaSource
 
     //     Console.WriteLine("Node Name: " + titleElement?.NodeName.ToLower() + "\n" + titleElement?.OuterHtml);
     // }
-    public Task<string> GetAudioAsync(string sourceUrl)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Dictionary<string, object>> GetMetadataAsync(string sourceUrl)
-    {
-        throw new NotImplementedException();
-    }
-
     public Task<string> GetThumbnailAsync(string sourceUrl)
     {
         throw new NotImplementedException();

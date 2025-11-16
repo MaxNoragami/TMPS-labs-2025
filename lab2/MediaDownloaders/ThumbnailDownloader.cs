@@ -4,14 +4,14 @@ namespace lab2.MediaDownloaders;
 
 public class ThumbnailDownloader(IMediaSource mediaSource) : MediaDownloader(mediaSource)
 {
-    public override Task DownloadAsync(string sourceUrl, string outputPath)
+    public override async Task DownloadAsync(string sourceUrl, string outputPath)
     {
-        throw new NotImplementedException();
-    }
+        var directThumbnailUrl = await mediaSource.GetThumbnailAsync(sourceUrl);
 
-    protected override async Task<Dictionary<string, object>> GetMetadataAsync(string sourceUrl)
-    {
-        var metadata = await base.GetMetadataAsync(sourceUrl);
-        throw new NotImplementedException();
+        using var httpClient = new HttpClient();
+        var thumbnailBytes = await httpClient.GetByteArrayAsync(directThumbnailUrl);
+        await File.WriteAllBytesAsync(outputPath, thumbnailBytes);
+
+        Console.WriteLine($"Downloaded thumbnail to: {outputPath}");
     }
 }
