@@ -2,7 +2,7 @@ using lab2.MediaSources;
 
 namespace lab2.MediaDownloaders;
 
-public class VideoDownloader(IMediaSource mediaSource) : MediaDownloader(mediaSource)
+public class VideoDownloader(IMediaSource mediaSource) : MediaDownloader(mediaSource), IVideoDownloader
 {
     public override async Task DownloadAsync(string sourceUrl, string outputPath)
     {
