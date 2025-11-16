@@ -1,14 +1,15 @@
 ﻿using lab2.MediaDownloaders;
 using lab2.MediaDownloaders.Decorators;
+using lab2.MediaDownloaders.Proxies;
 using lab2.MediaSources;
 
-// --- YouTube Downloads ---
 
-// Plain download
+// Plain download with cache
 var ytDownloader = new VideoDownloader(new YoutubeSource());
-await ytDownloader.DownloadAsync("https://www.youtube.com/watch?v=sKTIFe2tlrU", "Sung_Kang.mp4");
+var cachedDownloader = new CachingVideoDownloaderProxy(ytDownloader, "cache/videos");
+await cachedDownloader.DownloadAsync("https://www.youtube.com/watch?v=sKTIFe2tlrU", "Sung_Kang.mp4");
 
-// Converted and resized
+// Converted, watermarked, resized, with cache
 var ytProcessed = new ResolutionChangerDecorator(
     new FormatConverterDecorator(
         new WatermarkDecorator(ytDownloader, "watermark.jpg"),
@@ -16,23 +17,29 @@ var ytProcessed = new ResolutionChangerDecorator(
     ),
     "1920x1080"
 );
-await ytProcessed.DownloadAsync("https://www.youtube.com/watch?v=sKTIFe2tlrU", "Sung_Kang_1080p.mp4");
+var cachedProcessed = new CachingVideoDownloaderProxy(ytProcessed, "cache/processed");
+await cachedProcessed.DownloadAsync("https://www.youtube.com/watch?v=sKTIFe2tlrU", "Sung_Kang_1080p.mp4");
 
-// Metadata
-await new MetadataDownloader(new YoutubeSource())
-    .DownloadAsync("https://www.youtube.com/watch?v=sKTIFe2tlrU", "Sung_Kang.json");
+// Metadata with cache
+var metadataDownloader = new MetadataDownloader(new YoutubeSource());
+var cachedMetadata = new CachingMetadataDownloaderProxy(metadataDownloader, "cache/metadata");
+await cachedMetadata.DownloadAsync("https://www.youtube.com/watch?v=sKTIFe2tlrU", "Sung_Kang.json");
+
+// Test cache hit: download again, should copy from cache
+await cachedDownloader.DownloadAsync("https://www.youtube.com/watch?v=sKTIFe2tlrU", "Sung_Kang_copy.mp4");
+await cachedProcessed.DownloadAsync("https://www.youtube.com/watch?v=sKTIFe2tlrU", "Sung_Kang_1080p_copy.mp4");
+await cachedMetadata.DownloadAsync("https://www.youtube.com/watch?v=sKTIFe2tlrU", "Sung_Kang_copy.json");
 
 
-// --- Reddit Downloads ---
 
-// Uncomment to use Reddit source
-/*
 var redditDownloader = new VideoDownloader(new RedditSource());
-await redditDownloader.DownloadAsync("https://www.reddit.com/r/unixporn/comments/1oyqrrg/hyprland_rice_in_magenta_style/", "Reddit_Video.mp4");
+var cachedReddit = new CachingVideoDownloaderProxy(redditDownloader, "cache/reddit");
+await cachedReddit.DownloadAsync("https://www.reddit.com/r/unixporn/comments/1oyqrrg/hyprland_rice_in_magenta_style/", "Reddit_Video.mp4");
 
 var redditProcessed = new FormatConverterDecorator(redditDownloader, "mp4");
-await redditProcessed.DownloadAsync("https://www.reddit.com/r/unixporn/comments/1oyqrrg/hyprland_rice_in_magenta_style/", "Reddit_Converted.mp4");
+var cachedRedditProcessed = new CachingVideoDownloaderProxy(redditProcessed, "cache/reddit_processed");
+await cachedRedditProcessed.DownloadAsync("https://www.reddit.com/r/unixporn/comments/1oyqrrg/hyprland_rice_in_magenta_style/", "Reddit_Converted.mp4");
 
-await new MetadataDownloader(new RedditSource())
-    .DownloadAsync("https://www.reddit.com/r/unixporn/comments/1oyqrrg/hyprland_rice_in_magenta_style/", "Reddit_Metadata.json");
-*/
+var redditMetadata = new MetadataDownloader(new RedditSource());
+var cachedRedditMetadata = new CachingMetadataDownloaderProxy(redditMetadata, "cache/reddit_metadata");
+await cachedRedditMetadata.DownloadAsync("https://www.reddit.com/r/unixporn/comments/1oyqrrg/hyprland_rice_in_magenta_style/", "Reddit_Metadata.json");
