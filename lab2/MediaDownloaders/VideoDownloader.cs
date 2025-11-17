@@ -1,3 +1,4 @@
+using lab2.MediaDownloaders.Extensions;
 using lab2.MediaSources;
 
 namespace lab2.MediaDownloaders;
@@ -8,7 +9,8 @@ public class VideoDownloader(IMediaSource mediaSource) : MediaDownloader(mediaSo
     {
         var directVideoUrl = await mediaSource.GetVideoAsync(sourceUrl);
 
-        using var httpClient = new HttpClient();
+        using var httpClient = new HttpClient().AddUserAgent();
+
         var videoBytes = await httpClient.GetByteArrayAsync(directVideoUrl);
         await File.WriteAllBytesAsync(outputPath, videoBytes);
 

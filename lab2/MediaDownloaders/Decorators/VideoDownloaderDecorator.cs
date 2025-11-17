@@ -1,4 +1,3 @@
-
 namespace lab2.MediaDownloaders.Decorators;
 
 public abstract class VideoDownloaderDecorator(IVideoDownloader downloader) : IVideoDownloader

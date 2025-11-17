@@ -9,16 +9,20 @@ public class FormatConverterDecorator(
 
     public override async Task DownloadAsync(string sourceUrl, string outputPath)
     {
-        var baseName = Path.GetFileNameWithoutExtension(outputPath);
-        var dir = Path.GetDirectoryName(outputPath)!;
-        var intermediatePath = Path.Combine(dir, $"{baseName}_converted.{_targetFormat}");
+        var tempDir = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+        var tempFile = Path.Combine(tempDir, $"{Guid.NewGuid()}.{_targetFormat}");
 
-        await base.DownloadAsync(sourceUrl, intermediatePath);
-
-        if (!string.Equals(intermediatePath, outputPath, StringComparison.OrdinalIgnoreCase))
+        try
         {
-            await ConvertVideoAsync(intermediatePath, outputPath);
-            File.Delete(intermediatePath);
+            await base.DownloadAsync(sourceUrl, tempFile);
+            Console.WriteLine($"Starting conversion to {_targetFormat}...");
+            await ConvertVideoAsync(tempFile, outputPath);
+            Console.WriteLine($"Conversion to {_targetFormat} finished!");
+        }
+        finally
+        {
+            if (File.Exists(tempFile))
+                File.Delete(tempFile);
         }
     }
 
@@ -46,9 +50,7 @@ public class FormatConverterDecorator(
         await process.WaitForExitAsync();
 
         if (process.ExitCode != 0)
-        {
             throw new InvalidOperationException(
                 $"ffmpeg failed with exit code {process.ExitCode}: {stderrTask.Result}");
-        }
     }
 }

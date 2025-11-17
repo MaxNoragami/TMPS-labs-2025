@@ -9,17 +9,20 @@ public class WatermarkDecorator(
 
     public override async Task DownloadAsync(string sourceUrl, string outputPath)
     {
-        var baseName = Path.GetFileNameWithoutExtension(outputPath);
-        var ext = Path.GetExtension(outputPath);
-        var dir = Path.GetDirectoryName(outputPath)!;
-        var intermediatePath = Path.Combine(dir, $"{baseName}_watermarked{ext}");
+        var tempDir = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+        var tempFile = Path.Combine(tempDir, $"{Guid.NewGuid()}{Path.GetExtension(outputPath)}");
 
-        await base.DownloadAsync(sourceUrl, intermediatePath);
-
-        if (!string.Equals(intermediatePath, outputPath, StringComparison.OrdinalIgnoreCase))
+        try
         {
-            await AddWatermarkAsync(intermediatePath, outputPath);
-            File.Delete(intermediatePath);
+            await base.DownloadAsync(sourceUrl, tempFile);
+            Console.WriteLine($"Starting watermarking with '{_watermarkPath}'...");
+            await AddWatermarkAsync(tempFile, outputPath);
+            Console.WriteLine("Watermarking finished!");
+        }
+        finally
+        {
+            if (File.Exists(tempFile))
+                File.Delete(tempFile);
         }
     }
 
@@ -55,9 +58,7 @@ public class WatermarkDecorator(
         await process.WaitForExitAsync();
 
         if (process.ExitCode != 0)
-        {
             throw new InvalidOperationException(
                 $"ffmpeg failed with exit code {process.ExitCode}: {stderrTask.Result}");
-        }
     }
 }

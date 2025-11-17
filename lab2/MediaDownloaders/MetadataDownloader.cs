@@ -1,3 +1,4 @@
+using lab2.MediaDownloaders.Extensions;
 using lab2.MediaSources;
 
 namespace lab2.MediaDownloaders;
@@ -8,8 +9,7 @@ public class MetadataDownloader(IMediaSource mediaSource) : MediaDownloader(medi
     {
         var metadataUrl = await mediaSource.GetMetadataAsync(sourceUrl);
         Console.WriteLine(metadataUrl);
-        using var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36");
+        using var httpClient = new HttpClient().AddUserAgent();
 
         var jsonData = await httpClient.GetStringAsync(metadataUrl);
         await File.WriteAllTextAsync(outputPath, jsonData);

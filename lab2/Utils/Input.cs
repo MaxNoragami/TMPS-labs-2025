@@ -10,7 +10,7 @@ public static class Input
             Console.Write(prompt);
             input = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(input))
-                Console.WriteLine("Input cannot be empty!");
+                Console.WriteLine("! Input cannot be empty!");
         } while (string.IsNullOrWhiteSpace(input));
         return input;
     }
@@ -27,7 +27,7 @@ public static class Input
             var input = Console.ReadLine();
             if (int.TryParse(input, out choice) && choice >= 1 && choice <= options.Length)
                 return choice;
-            Console.WriteLine("Invalid choice. Try again.");
+            Console.WriteLine("! Invalid choice. Try again.");
         } while (true);
     }
 
@@ -38,7 +38,7 @@ public static class Input
         {
             fmt = ReadNonEmpty("Enter target format (e.g. mp4): ");
             if (fmt.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 || fmt.Length < 2)
-                Console.WriteLine("Invalid format. Try again.");
+                Console.WriteLine("! Invalid format. Try again.");
             else
                 break;
         } while (true);
@@ -52,26 +52,25 @@ public static class Input
         {
             wm = ReadNonEmpty("Enter watermark image path: ");
             if (!File.Exists(wm))
-                Console.WriteLine("File does not exist. Try again.");
+                Console.WriteLine("! File does not exist. Try again.");
             else
                 break;
         } while (true);
         return wm;
     }
 
-    public static string ReadResolution()
+    public static string ReadWidth()
     {
-        string res;
+        string width;
         do
         {
-            res = ReadNonEmpty("Enter resolution (e.g. 1920x1080): ");
-            var parts = res.Split('x');
-            if (parts.Length != 2 || !int.TryParse(parts[0], out var w) || !int.TryParse(parts[1], out var h) || w <= 0 || h <= 0)
-                Console.WriteLine("Invalid resolution. Try again.");
+            width = ReadNonEmpty("Enter target width in pixels (e.g. 1920): ");
+            if (!int.TryParse(width, out var w) || w <= 0)
+                Console.WriteLine("! Invalid width. Must be a positive number.");
             else
                 break;
         } while (true);
-        return res;
+        return width;
     }
 
     public static bool ReadYesNo(string prompt)
@@ -82,7 +81,7 @@ public static class Input
             var input = (Console.ReadLine() ?? "").Trim().ToLower();
             if (input == "y" || input == "yes") return true;
             if (input == "n" || input == "no") return false;
-            Console.WriteLine("Please enter 'y' or 'n'.");
+            Console.WriteLine("! Please enter 'y' or 'n'.");
         }
     }
 
@@ -95,7 +94,7 @@ public static class Input
             file = ReadNonEmpty($"Enter output file (will be saved as .{ext}): ");
             file = Path.ChangeExtension(file, $".{ext}");
             if (file.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-                Console.WriteLine("Invalid file name. Try again.");
+                Console.WriteLine("! Invalid file name. Try again.");
             else
                 break;
         } while (true);
@@ -111,7 +110,7 @@ public static class Input
             file = ReadNonEmpty("Enter metadata output file (will be saved as .json): ");
             file = Path.ChangeExtension(file, ".json");
             if (file.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-                Console.WriteLine("Invalid file name. Try again.");
+                Console.WriteLine("! Invalid file name. Try again.");
             else
                 break;
         } while (true);
