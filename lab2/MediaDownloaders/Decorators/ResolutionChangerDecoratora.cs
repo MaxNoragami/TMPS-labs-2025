@@ -30,7 +30,7 @@ public class ResolutionChangerDecorator(
             StartInfo = new ProcessStartInfo
             {
                 FileName = "ffmpeg",
-                Arguments = $"-y -loglevel error -hide_banner -i \"{inputPath}\" -vf scale={_resolution} \"{outputPath}\"",
+                Arguments = $"-y -loglevel error -hide_banner -i \"{inputPath}\" -vf \"scale=trunc(iw/2)*2:trunc(ih/2)*2\" \"{outputPath}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
